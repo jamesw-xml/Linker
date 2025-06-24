@@ -37,9 +37,17 @@ internal class Program
                 {
                     var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Any, 2113);
                     listener.Start();
-                    // Accept a dummy client in the background so the port remains open
-                    var client = listener.AcceptTcpClientAsync(); // Fire and forget to keep it alive
-                    Console.WriteLine(client.Result.Available);
+                    _ = listener.AcceptTcpClientAsync().ContinueWith(task =>
+                    {
+                        if (task.Exception != null)
+                        {
+                            Console.WriteLine("Telepresence dummy listener exception: " + task.Exception.GetBaseException().Message);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Telepresence dummy connection accepted.");
+                        }
+                    });
                     services.AddSingleton(listener); // Keep it from being GC'd (optional)
                 }
                 services.AddSingleton<CertManager>();
