@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Net.Sockets
 
 namespace Linker;
 
@@ -33,7 +34,15 @@ internal class Program
                 context.Configuration.Bind(settings);
                 settings.BufferSize = Math.Clamp(settings.BufferSize, LinkerService.MinAllowedBuffer, LinkerService.MaxAllowedBuffer);
                 services.AddSingleton(settings);
-
+   
+                if (settings.EnableTelepresencePort)
+                {
+                    var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Any, 2113);
+                    listener.Start();
+                    // Accept a dummy client in the background so the port remains open
+                    _ = listener.AcceptTcpClientAsync(); // Fire and forget to keep it alive
+                    services.AddSingleton(listener); // Keep it from being GC'd (optional)
+                }
                 services.AddSingleton<CertManager>();
                 services.AddSingleton<ReplicaApp>(); // Your main app entry class
             })

@@ -2,13 +2,14 @@
 
 public class Settings
 {
-    public string DataFolder { get; set; } = "/data"; 
+    public string DataFolder { get; set; } = "/data";
     public bool AutomaticTuning { get; set; } = true;
     public int BufferSize { get; set; } = 100;
     public bool HandleConflicts { get; set; } = true;
     public bool ResolveLinkTos { get; set; } = false;
     public bool InteractiveMode { get; set; } = false;
     public IEnumerable<Link> Links { get; set; } = new List<Link>();
+    public bool EnableTelepresencePort {get; set; } = true;
 }
 
 public class Link
