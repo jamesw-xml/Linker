@@ -39,5 +39,7 @@ COPY src/Linker/appsettings.json /config/appsettings.json
 # Recommended: default env for config file (override at runtime)
 ENV LINKER_CONFIG_PATH=/config/appsettings.json
 
+EXPOSE 2113
+
 # Runtime command
 ENTRYPOINT ["dotnet", "Linker.dll"]
