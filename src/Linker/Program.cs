@@ -38,7 +38,8 @@ internal class Program
                     var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Any, 2113);
                     listener.Start();
                     // Accept a dummy client in the background so the port remains open
-                    _ = listener.AcceptTcpClientAsync(); // Fire and forget to keep it alive
+                    var client = listener.AcceptTcpClientAsync(); // Fire and forget to keep it alive
+                    Console.WriteLine(client.Result.Available);
                     services.AddSingleton(listener); // Keep it from being GC'd (optional)
                 }
                 services.AddSingleton<CertManager>();
